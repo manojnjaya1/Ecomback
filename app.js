@@ -4,7 +4,10 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const path = require("path");
+const cors = require('cors');
 
+app.use(cors());
+app.options('*', cors());
 const errorMiddleware = require("./middleware/error");
 
 // Config
@@ -16,7 +19,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
-
+// app.use(cors('*')) 
+app.all('/*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
 // Route Imports
 const product = require("./routes/productRoute");
 const user = require("./routes/userRoutes");
